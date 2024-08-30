@@ -1,0 +1,46 @@
+student_council_bot/
+│
+├── bot.py                        # Main entry point for the bot
+├── config.py                     # Configuration settings (API keys, bot token, etc.)
+├── requirements.txt              # List of dependencies
+├── README.md                     # Project documentation
+├── .env                          # Environment variables
+│
+├── handlers/                     # Directory for callback query and command handlers
+│   ├── __init__.py
+│   ├── club_event.py             # Handlers for club and event management
+│   ├── file_uploads.py           # Handlers for file uploads and management
+│   ├── contact_requests.py       # Handlers for contact information requests
+│   ├── reminders.py              # Handlers for sending reminders and notifications
+│   ├── meetings.py               # Handlers for meeting scheduling and attendance
+│   ├── admin_tasks.py            # Handlers for admin-related tasks (add/remove, assign tasks, calendar)
+│
+├── keyboards/                    # Directory for inline keyboards and buttons
+│   ├── __init__.py
+│   ├── club_event_keyboards.py   # Keyboards for club and event selection
+│   ├── file_upload_keyboards.py  # Keyboards for file upload options
+│   ├── contact_keyboards.py      # Keyboards for contact requests
+│   ├── reminder_keyboards.py     # Keyboards for reminders and notifications
+│   ├── meeting_keyboards.py      # Keyboards for meetings
+│   ├── admin_keyboards.py        # Keyboards for admin tasks
+│
+├── services/                     # Directory for services and business logic
+│   ├── __init__.py
+│   ├── club_service.py           # Logic for handling club-related operations
+│   ├── file_service.py           # Logic for managing file uploads and deadlines
+│   ├── contact_service.py        # Logic for handling contact information requests
+│   ├── reminder_service.py       # Logic for sending out reminders and notifications
+│   ├── meeting_service.py        # Logic for managing meetings and attendance
+│   ├── admin_service.py          # Logic for admin tasks like adding/removing participants, managing calendar
+│
+├── utils/                        # Directory for utility functions and helpers
+│   ├── __init__.py
+│   ├── db.py                     # Database connection and operations
+│   ├── scheduler.py              # Task scheduling functions
+│   ├── validators.py             # Input validation functions
+│   ├── logger.py                 # Logging setup
+│
+└── templates/                    # Directory for template messages or documents
+    ├── reminder_template.txt     # Template for reminder messages
+    ├── meeting_template.txt      # Template for meeting invitations
+    └── report_template.txt       # Template for event report messages
