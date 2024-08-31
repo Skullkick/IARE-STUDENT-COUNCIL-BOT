@@ -28,6 +28,8 @@ async def create_council_management_table():
         """)
         conn.commit()
 
+
+#Council Activites database code.
 async def create_council_activities_table():
     """
     Create the necessary tables for council activities in the SQLite database.
@@ -44,24 +46,6 @@ async def create_council_activities_table():
                 location TEXT,
                 organizer TEXT,
                 participants_count INTEGER
-            )
-        """)
-        conn.commit()
-
-def create_clubs_table():
-    """
-    Create the necessary table for storing club information in the SQLite database.
-    """
-    with sqlite3.connect(CLUBS_DATABASE) as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS clubs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                description TEXT,
-                founding_date DATE,
-                president TEXT,
-                members_count INTEGER
             )
         """)
         conn.commit()
@@ -161,3 +145,23 @@ async def get_activity_details(activity_id, include_name=True, include_descripti
             return result
         else:
             return None
+
+# Clubs code.
+async def create_clubs_table():
+    """
+    Create the necessary table for storing club information in the SQLite database.
+    """
+    with sqlite3.connect(CLUBS_DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS clubs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                description TEXT,
+                founding_date DATE,
+                president TEXT,
+                members_count INTEGER
+            )
+        """)
+        conn.commit()
+
