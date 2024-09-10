@@ -47,6 +47,6 @@ async def event_callback_function(bot,callback_query):
     elif callback_query.data == "add_club":
         chat_id = callback_query.message.chat.id
         await callback_query.message.delete()
-        await 
+        await club_service.add_club_details(bot,chat_id)
 
     
