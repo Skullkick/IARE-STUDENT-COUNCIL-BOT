@@ -283,29 +283,29 @@ async def delete_event_by_id(event_id: int):
         await connection.close() 
  
  
-async def create_event_table():
-    connection = await connect_pg_database()
-    try:
-        query = '''
-            CREATE TABLE IF NOT EXISTS event_data (
-                event_id SERIAL PRIMARY KEY,
-                reporter_name TEXT,
-                reporter_number TEXT,
-                photos_link TEXT,
-                event_report TEXT,
-                proposal_form TEXT,
-                flyer_and_schedule TEXT,
-                list_of_participants TEXT
-            )
-        '''
-        await connection.execute(query)
-        print("Event_data table created successfully.")
-        return True
-    except Exception as e:
-        print(f"An error occurred while creating the event_data table: {e}")
-        return False
-    finally:
-        await connection.close()
+# async def create_event_table():
+#     connection = await connect_pg_database()
+#     try:
+#         query = '''
+#             CREATE TABLE IF NOT EXISTS event_data (
+#                 event_id SERIAL PRIMARY KEY,
+#                 reporter_name TEXT,
+#                 reporter_number TEXT,
+#                 photos_link TEXT,
+#                 event_report TEXT,
+#                 proposal_form TEXT,
+#                 flyer_and_schedule TEXT,
+#                 list_of_participants TEXT
+#             )
+#         '''
+#         await connection.execute(query)
+#         print("Event_data table created successfully.")
+#         return True
+#     except Exception as e:
+#         print(f"An error occurred while creating the event_data table: {e}")
+#         return False
+#     finally:
+#         await connection.close()
 
 
 async def store_or_update_event_data(event_id=None, reporter_name=None, reporter_number=None, photos_link=None,
