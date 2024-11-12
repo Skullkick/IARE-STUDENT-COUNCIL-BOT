@@ -3,8 +3,8 @@ from templates import council_templates
 from keyboards import student_council_keyboard
 from services import student_council_service
 from handlers import club_event_handler
-from utils import sqlitedb,time
-import json
+from utils import sqlitedb,time,PostgresSQL
+import json,os
 # from pyrogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 
 ADMIN_AUTHORIZATION_CODE = os.environ.get("ADMIN_AUTHORIZATION_PASS")
@@ -21,7 +21,10 @@ async def add_admin_by_authorization(bot,message):
         # await managers_handler.store_as_admin(admin_name,chat_id)
         # await pgdatabase.store_as_admin(admin_name,chat_id)
         await sqlitedb.store_student_council_info(chat_id=chat_id)
+        # await PostgresSQL.store_student_council_info(chat_id=chat_id)
         await bot.send_message(chat_id,"Authorized Successfully for Admin access, use \"/admin\" to start admin panel.")
+        #  Save to postgres database to make sure it saves permanently.
+        await PostgresSQL.store_student_council_info(chat_id=chat_id)
         await message.delete()
 
 async def initialize_storing_core_values(chat_id):
@@ -37,10 +40,15 @@ async def initialize_storing_core_values(chat_id):
         core_member_chat_id=core_member_chat_id,
         tasks=json.dumps({})
     )
-    
+    await PostgresSQL.store_core_team_info(
+        core_name=core_name,
+        core_member_name=core_member_name,
+        core_member_chat_id=core_member_chat_id,
+        tasks=json.dumps({})
+    )
     # After storing the core team information, delete it from the temporary table
     await sqlitedb.delete_temp_core_team_member_by_user_chat_id(chat_id)
-    print(await sqlitedb.get_all_core_team_members())
+    # print(await sqlitedb.get_all_core_team_members())
     # except Exception as e:
     #     print(f"Error storing the core team values to the database: {e}")
 
@@ -56,6 +64,10 @@ async def initialize_storing_temp_enforcement_team_values(temp_chat_id):
     
     # After storing the core team information, delete it from the temporary table
         await sqlitedb.delete_temp_enforcement_team_member(temp_chat_id)
+        await PostgresSQL.store_enforcement_team_details(
+        chat_id=enft_chat_id,  # Enforcement team member chat_id.
+        name=enft_mem_name # Enforcement team member name.
+        )
 
     # except Exception as e:
     #     print(f"Error storing the ENFT team values to the database: {e}")
@@ -67,6 +79,11 @@ async def store_edited_core_values(chat_id):
         
         # Store the core team information into the main core team table
         await sqlitedb.store_core_team_info(
+            core_name=core_name,
+            core_member_name=core_member_name,
+            core_member_chat_id=core_member_chat_id
+        )
+        await PostgresSQL.store_core_team_info(
             core_name=core_name,
             core_member_name=core_member_name,
             core_member_chat_id=core_member_chat_id
@@ -215,6 +232,7 @@ async def remove_task_and_store(core_member_id, index,callback_query):
     tasks = {i+1: tasks[key] for i, key in enumerate(sorted(tasks.keys()))}
     # updated_tasks = " - ".join(task.strip() for task in tasks_assigned)
     await sqlitedb.store_core_team_info(core_team_index=core_member_id,tasks=json.dumps(tasks))
+    await PostgresSQL.store_core_team_info(core_team_index=core_member_id,tasks=tasks)
     data_part = callback_query.data.split("-")
     core_member_id = data_part[2]
     await callback_query.edit_message_text(
@@ -228,7 +246,7 @@ async def update_task_status(core_member_id, index, callback_query):
     # Retrieve core member info and parse tasks
     core_member_info = await sqlitedb.get_core_member_details(core_member_id, tasks=True)
     tasks = json.loads(core_member_info['tasks'])
-    print(tasks)
+    # print(tasks)
     
     # Initialize the "Back" button
     button = [InlineKeyboardButton("Back", callback_data="CORE-Toggle_task_status")]
@@ -257,6 +275,7 @@ async def update_task_status(core_member_id, index, callback_query):
 
 
 async def get_enft_team_violations():
+    # Used to get the violations for the enforcement team
     all_event_ids = await sqlitedb.get_all_event_ids()
     for event_id in all_event_ids:
         event_data = await sqlitedb.retrieve_event_data(event_id=event_id)
@@ -300,3 +319,6 @@ async def store_enft_team_violations():
         if violations:
             for violation in violations:
                 await sqlitedb.store_violation_details(violation=violation,club_name=club_name,status='open',time_remaining='72')
+                # Implement a method such that the violations are loaded at a time into postgres database so that it saves the time.
+                await PostgresSQL.store_violation_details(violation=violation,club_name=club_name,status='open',time_remaining='72')
+

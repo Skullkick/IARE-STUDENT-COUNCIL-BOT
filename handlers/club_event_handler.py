@@ -2,7 +2,7 @@
 from templates import club_events_templates
 from keyboards import club_event_keyboards
 from services import club_event_service
-from utils import sqlitedb,time
+from utils import sqlitedb,time,PostgresSQL
 
 async def start_clubs_buttons(bot,message):
     """
@@ -40,7 +40,16 @@ async def initialize_storing_club_values(chat_id):
         ):
         
             # If storage is successful, delete the temporary entry
+            await PostgresSQL.store_club_info(
+                name=club_name,
+                description=club_description,
+                president=club_president,
+                pres_chat_id=pres_chat_id,
+                vice_president=club_vice_president,
+                vice_pres_chat_id=vice_pres_chat_id
+            )
             await sqlitedb.delete_temp_club_by_chat_id(chat_id)
+
         
     except Exception as e:
         print(f"Error storing Club info to the database: {e}")
@@ -54,7 +63,14 @@ async def store_edited_club_values(chat_id):
             president=club_president,
             vice_president=club_vice_president
             )
+        await PostgresSQL.store_club_info(
+            club_id=temp_club_id,name=club_name,
+            description=club_description,
+            president=club_president,
+            vice_president=club_vice_president
+        )
         await sqlitedb.delete_temp_club_by_chat_id(chat_id)
+
     except Exception as  e:
         print(f"Error storing the values to the database : {e}")
 
@@ -70,6 +86,16 @@ async def store_edited_event_values(chat_id):
             audience_size=event_audience_size,
             type=event_type,
             club_id=club_id 
+        )
+        await PostgresSQL.store_event_info(
+            id=stored_event_id,
+            name=event_name,
+            number_of_days=event_no_of_days,
+            date_time=event_date_time,
+            venue = event_venue,
+            audience_size=event_audience_size,
+            type=event_type,
+            club_id=club_id  
         )
         await sqlitedb.delete_temp_event_by_chat_id(chat_id)
         #Get the event details by event_id 
@@ -87,6 +113,13 @@ async def store_edited_event_values(chat_id):
         report_upload = report_upload_date + "-not_submitted"
         photos_upload = photos_upload_date+"-not_submitted"
         await sqlitedb.store_or_update_event_data(event_id=stored_event_id,photos_link=photos_upload,event_report=report_upload,proposal_form=proposal_form,flyer_and_schedule=flyer_and_schedule,list_of_participants=list_of_participants)
+        await PostgresSQL.store_or_update_event_data(event_id=stored_event_id,
+                                                  photos_link=photos_upload,
+                                                  event_report=report_upload,
+                                                  proposal_form=proposal_form,
+                                                  flyer_and_schedule=flyer_and_schedule,
+                                                  list_of_participants=list_of_participants
+                                                  )
     except Exception as  e:
         print(f"Error storing the values to the database : {e}")
 
@@ -111,13 +144,23 @@ async def initialize_storing_event_values(chat_id):
         # After storing the event information, delete it from the temporary table
         event_name = event_name
         await sqlitedb.delete_temp_event_by_chat_id(chat_id)
-        print("Successfully deleted temp event by chat_id")
+        await PostgresSQL.store_event_info(        
+            id=None, 
+            name=event_name,
+            number_of_days=number_of_days,
+            date_time=date_time,
+            venue=venue,
+            audience_size=audience_size,
+            type=type_of_event,
+            club_id=club_id
+            )
+        # print("Successfully deleted temp event by chat_id")
     # Get the event id to set the date for event_data
     event_id = await sqlitedb.get_event_id_by_name(event_name=event_name)
     #Get the event details by event_id 
     if event_id:
         event_details = await sqlitedb.get_event_info_by_id(event_id=event_id)
-        print(event_details)
+        # print(event_details)
         _,event_name,number_of_days,date_time,venue,audience_size,type_of_event,club_id = event_details
         event_date = date_time.split("-")[0]
         proposal_form_date = await time.modify_event_date(event_date=event_date,num_of_days=-1)
@@ -131,7 +174,7 @@ async def initialize_storing_event_values(chat_id):
         report_upload = report_upload_date + "-not_submitted"
         photos_upload = photos_upload_date+"-not_submitted"
         await sqlitedb.store_or_update_event_data(event_id=event_id,photos_link=photos_upload,event_report=report_upload,proposal_form=proposal_form,flyer_and_schedule=flyer_and_schedule,list_of_participants=list_of_participants)
-
+        await PostgresSQL.store_or_update_event_data(event_id=event_id,photos_link=photos_upload,event_report=report_upload,proposal_form=proposal_form,flyer_and_schedule=flyer_and_schedule,list_of_participants=list_of_participants)
     # except Exception as e:
     #     print(f"Error storing the event values to the database: {e}")
 
@@ -273,7 +316,7 @@ async def recieve_events_info(bot,message):
 async def recieve_edit_event_info(bot, message):
     chat_id = message.chat.id
     edit_action = await sqlitedb.check_permission(chat_id, edit_events=True)
-    print(bool(edit_action))
+    # print(bool(edit_action))
     if edit_action == "name":
         text = message.text
         if text:
@@ -337,5 +380,6 @@ async def recieve_reporter_details(bot,message,event_id):
                 await bot.send_message(chat_id,club_events_templates.ADD_EVENT_DATA[6])
                 return
             await sqlitedb.store_or_update_event_data(event_id=event_id,reporter_name=text[0],reporter_number=text[1])
+            await PostgresSQL.store_or_update_event_data(event_id=event_id,reporter_name=text[0],reporter_number=text[1])
             await sqlitedb.set_permissions(chat_id)
             await bot.send_message(chat_id,club_events_templates.ADD_EVENT_DATA[7])
