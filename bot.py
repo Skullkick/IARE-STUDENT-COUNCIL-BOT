@@ -1,6 +1,6 @@
 # This is the main entry point for the bot.
 from pyrogram import Client,filters
-import config
+# import config
 from templates import club_events_templates,council_templates
 from handlers import club_event_handler,council_members,file_uploads
 from keyboards import club_event_keyboards,student_council_keyboard
