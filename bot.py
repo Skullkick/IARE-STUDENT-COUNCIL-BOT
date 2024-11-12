@@ -5,7 +5,7 @@ from templates import club_events_templates,council_templates
 from handlers import club_event_handler,council_members,file_uploads
 from keyboards import club_event_keyboards,student_council_keyboard
 from services import student_council_service
-from utils import sqlitedb
+from utils import sqlitedb,sync_databases,PostgresSQL
 import asyncio,os
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
@@ -18,7 +18,7 @@ bot = Client(
         api_hash = API_HASH
 )
 
-@bot.on_message(filters.command(commands=["event"]))
+# @bot.on_message(filters.command(commands=["event"]))
 async def start_event_handler(bot,message):
     chat_id = message.chat.id
     if await sqlitedb.check_permission(chat_id,events=True) is True:
@@ -59,7 +59,7 @@ async def start_buttons(bot,message):
     else:
         await bot.send_message(chat_id,"You are not a member of this bot.")
 
-@bot.on_message(filters.command(commands=["clubs"]))
+# @bot.on_message(filters.command(commands=["clubs"]))
 async def start_clubs(bot,message):
     chat_id = message.chat.id
     if await sqlitedb.check_permission(chat_id,clubs=True) is True:
@@ -129,7 +129,10 @@ async def callback_query(bot,callback_query):
 
 
 async def main(bot):
+    await PostgresSQL.create_all_pgdatabase_tables()
     await sqlitedb.initialize_sqlite_database()
+    await sync_databases.sync_databases()
+    # Add subroutine for reminders function.
 
 
 if __name__ == "__main__":
