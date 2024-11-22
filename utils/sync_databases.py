@@ -1,8 +1,5 @@
 from utils import sqlitedb,PostgresSQL
-# import PostgresSQL
-# import asyncio
-# import sqlite3
-# import sqlitedb
+
 async def sync_databases():
     await perform_sync_student_council()
     await perform_sync_clubs_table()
@@ -12,7 +9,7 @@ async def sync_databases():
     
     await perform_sync_core_team_table_info()
     await perform_sync_enforcement_team_info()
-    await create_permissions_table()
+    # await create_permissions_table()
 
 
 
