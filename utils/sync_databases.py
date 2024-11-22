@@ -1,7 +1,7 @@
-import sqlitedb
-import PostgresSQL
-import asyncio
-import sqlite3
+from utils import sqlitedb,PostgresSQL
+# import PostgresSQL
+# import asyncio
+# import sqlite3
 # import sqlitedb
 async def sync_databases():
     await perform_sync_student_council()
