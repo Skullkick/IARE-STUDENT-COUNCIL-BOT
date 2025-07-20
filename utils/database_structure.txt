@@ -1,0 +1,42 @@
+database_schema/
+│
+├── activities/
+│   ├── id: INTEGER PRIMARY KEY AUTOINCREMENT
+│   ├── club_id: INTEGER
+│   ├── name: TEXT NOT NULL
+│   ├── club_name: TEXT
+│   ├── description: TEXT
+│   ├── date: DATE DEFAULT CURRENT_DATE
+│   ├── location: TEXT
+│   ├── organizer: TEXT
+│   ├── participants_count: INTEGER
+│
+├── clubs/
+│   ├── id (CLUBS_DATABASE): INTEGER PRIMARY KEY AUTOINCREMENT
+│   ├── name: TEXT NOT NULL
+│   ├── description: TEXT
+│   ├── president: TEXT
+│   ├── vice_president: TEXT
+│
+├── clubs_temp/
+│   ├── chat_id: INTEGER PRIMARY KEY
+│   ├── name: TEXT NOT NULL
+│   ├── description: TEXT
+│   ├── president: TEXT
+│   ├── vice_president: TEXT
+│
+├── permissions/
+│   ├── chat_id: INTEGER PRIMARY KEY
+│   ├── events: BOOLEAN NOT NULL
+│   ├── clubs: BOOLEAN NOT NULL
+│   ├── proposal_form: BOOLEAN NOT NULL
+│   ├── flyer: BOOLEAN NOT NULL
+│
+└── members/
+    ├── id: INTEGER PRIMARY KEY AUTOINCREMENT
+    ├── name: TEXT NOT NULL
+    ├── role: TEXT NOT NULL
+    ├── email: TEXT UNIQUE NOT NULL
+    ├── phone: TEXT UNIQUE NOT NULL
+    ├── tenure_start: DATE NOT NULL
+    ├── tenure_end: DATE

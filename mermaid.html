@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mermaid Diagrams</title>
+  <!-- Include Mermaid.js from CDN -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+</head>
+<body>
+  <h1>Mermaid Diagram Example</h1>
+
+  <!-- Mermaid diagram code -->
+  <div class="mermaid">
+    graph TB
+      A[Admins]
+      A1[President]
+      A2[Vice President]
+      A3[Dean of Student Council]
+      A4[Enforcement Team]
+      A4a[Enforcement 1]
+      A4b[Enforcement 2]
+      A4c[Enforcement 3]
+
+      B[Club Presidents & Core Team]
+      B1[NSS]
+      B2[Street Cause]
+      B3[Fine Arts]
+      B4[Citadel]
+      B5[Compendium]
+      B6[e-DAM]
+      B7[Chitrakala]
+      B8[N2O Factory]
+      B9[Pixels]
+      B10[ELC]
+      B11[Rhapsody]
+      B12[Plugs]
+      B13[E Cell]
+      B14[Bakasura]
+      B15[Sports]
+      B16[GDSC]
+      B17[Versailles]
+      B18[ASMII]
+      B19[Core Team]
+      B19a[Cultural Head]
+      B19b[Cultural Co-Head]
+      B19c[Social Media Head]
+      B19d[Design Head]
+      B19e[Design Co-Head]
+      B19f[Content Head]
+      B19g[Content Co-Head]
+      B19h[Logistics Head]
+      B19i[Logistics Co-Head]
+      B19j[Brand Building Head]
+      B19k[Brand Building Co-Head]
+      B19l[Grievance Team 3]
+
+      subgraph Club_Operations
+        F[Event Details]
+        F1[Event Name]
+        F2[Event Duration Days]
+        F3[Event Date & Time]
+        F4[Event Venue]
+        F5[Audience Size]
+        F6[Event Type Tech/Non-Tech]
+        F7[Event Overview 100 Words]
+        F8[Proposal Form Upload Closed 1 day before]
+        F9[Flyer & Schedule Upload Closed 1 day before]
+        F10[List of Participants Upload on event day]
+        F11[Request for Reporter & Photographer]
+        F12[Reporter/Photographer Info Compendium President]
+        F13[Report Upload PDF 2 days after]
+        F14[Photos Upload Drive link 2 days after]
+      end
+
+      subgraph Reminders
+        R1[Reminders to Club President]
+        R2[Twice Daily Notifications for File Uploads]
+        R3[Meeting Notifications Monthly, Weekly, Pre-Event]
+        R4[Absentees marked and reported to Enforcement Team]
+        R5[Enforcement Team decides validity of absences]
+      end
+
+      subgraph Meetings
+        M1[Monthly Meeting - Clubs Discuss Events]
+        M2[Weekly Saturday Meeting Reminder]
+        M3[Pre-Event Daily Notifications 3 Days Prior]
+        M4[Schedule Meetings - Notify Specific Members]
+        M5[Absentees Provide Explanation to Enforcement Team]
+      end
+
+      subgraph Admin_Privileges
+        P1[Add/Remove Participants]
+        P2[Schedule Meetings]
+        P3[View All Club Inputs]
+        P4[Assign Tasks to Clubs with Deadlines]
+        P5[Modify Event Calendar Read Only for Clubs]
+      end
+  </div>
+</body>
+</html>

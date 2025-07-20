@@ -1,0 +1,5 @@
+.venv/
+.venv/lib/
+* .code-workspace
+__pycache__/
+pdfs/

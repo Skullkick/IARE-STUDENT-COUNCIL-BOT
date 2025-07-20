@@ -1,0 +1,1 @@
+Completed implementing adding of club information.
